@@ -15,7 +15,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -67,56 +69,22 @@ public class PlayerServiceImpl implements PlayerService {
     ) {
         Player player = getPlayerOrThrowNotFound(id);
 
-        updateNameIfNotEquals(player, dto);
-        updateSurnameIfNotEquals(player, dto);
-        updateBirthDateIfNotEquals(player, dto);
-        updateExperienceInMouthsIfNotEquals(player, dto);
+        updateIfChanged(player::getName, player::setName, dto.name());
+        updateIfChanged(player::getSurname, player::setSurname, dto.surname());
+        updateIfChanged(player::getBirthDate, player::setBirthDate, dto.birthDate());
+        updateIfChanged(player::getExperienceInMouths, player::setExperienceInMouths, dto.experienceInMouths());
 
         Player savedPlayer = playerRepository.save(player);
         return playerMapper.toDTO(savedPlayer);
     }
 
-    private void updateNameIfNotEquals(
-            Player player,
-            PlayerDTO dto
+    private <T> void updateIfChanged(
+            Supplier<T> getter,
+            Consumer<T> setter,
+            T newValue
     ) {
-        String oldName = player.getName();
-        String newName = dto.name();
-        if (!oldName.equals(newName)) {
-            player.setName(newName);
-        }
-    }
-
-    private void updateSurnameIfNotEquals(
-            Player player,
-            PlayerDTO dto
-    ) {
-        String oldSurname = player.getSurname();
-        String newSurname = dto.surname();
-        if (!oldSurname.equals(newSurname)) {
-            player.setSurname(newSurname);
-        }
-    }
-
-    private void updateBirthDateIfNotEquals(
-            Player player,
-            PlayerDTO dto
-    ) {
-        LocalDate oldBirthDate = player.getBirthDate();
-        LocalDate newBirthDate = dto.birthDate();
-        if (!oldBirthDate.equals(newBirthDate)) {
-            player.setBirthDate(newBirthDate);
-        }
-    }
-
-    private void updateExperienceInMouthsIfNotEquals(
-            Player player,
-            PlayerDTO dto
-    ) {
-        int oldExperienceInMouths = player.getExperienceInMouths();
-        int newExperienceInMouths = dto.experienceInMouths();
-        if (oldExperienceInMouths != newExperienceInMouths) {
-            player.setExperienceInMouths(newExperienceInMouths);
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
         }
     }
 
