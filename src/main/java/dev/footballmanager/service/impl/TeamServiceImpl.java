@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
@@ -68,44 +71,21 @@ public class TeamServiceImpl implements TeamService {
     ) {
         Team team = getTeamOrThrowNotFound(id);
 
-        updateNameIfNotEquals(team, dto);
-        updateTransferFeeIfNotEquals(team, dto);
-        updateAccountIfNotEquals(team, dto);
+        updateIfChanged(team::getName, team::setName, dto.name());
+        updateIfChanged(team::getTransferFee, team::setTransferFee, dto.transferFee());
+        updateIfChanged(team::getAccount, team::setAccount, dto.account());
 
         Team savedTeam = teamRepository.save(team);
         return teamMapper.toDTO(savedTeam);
     }
 
-    private void updateNameIfNotEquals(
-            Team team,
-            TeamDTO dto
+    private <T> void updateIfChanged(
+            Supplier<T> getter,
+            Consumer<T> setter,
+            T newValue
     ) {
-        String oldName = team.getName();
-        String newName = dto.name();
-        if (!oldName.equals(newName)) {
-            team.setName(newName);
-        }
-    }
-
-    private void updateTransferFeeIfNotEquals(
-            Team team,
-            TeamDTO dto
-    ) {
-        double oldTransferFee = team.getTransferFee();
-        double newTransferFee = dto.transferFee();
-        if (oldTransferFee != newTransferFee) {
-            team.setTransferFee(newTransferFee);
-        }
-    }
-
-    private void updateAccountIfNotEquals(
-            Team team,
-            TeamDTO dto
-    ) {
-        double oldAccount = team.getAccount();
-        double newAccount = dto.account();
-        if (oldAccount != newAccount) {
-            team.setAccount(newAccount);
+        if (!Objects.equals(getter.get(), newValue)) {
+            setter.accept(newValue);
         }
     }
 
