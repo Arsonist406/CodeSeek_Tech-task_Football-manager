@@ -31,11 +31,11 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerDTO findById(
             Long id
     ) {
-        Player player = getPlayerOrThrowNotFound(id);
+        Player player = getPlayer(id);
         return playerMapper.toDTO(player);
     }
 
-    private Player getPlayerOrThrowNotFound(
+    private Player getPlayer(
             Long id
     ) {
         return playerRepository
@@ -67,7 +67,7 @@ public class PlayerServiceImpl implements PlayerService {
             Long id,
             PlayerDTO dto
     ) {
-        Player player = getPlayerOrThrowNotFound(id);
+        Player player = getPlayer(id);
 
         updateIfChanged(player::getName, player::setName, dto.name());
         updateIfChanged(player::getSurname, player::setSurname, dto.surname());
@@ -94,8 +94,8 @@ public class PlayerServiceImpl implements PlayerService {
             Long playerId,
             Long teamId
     ) {
-        Player player = getPlayerOrThrowNotFound(playerId);
-        Team team = teamService.getTeamOrThrowNotFound(teamId);
+        Player player = getPlayer(playerId);
+        Team team = teamService.getTeam(teamId);
 
         setPlayerTeamIfPlayerNotAlreadyInTeam(player, team);
 
@@ -119,7 +119,7 @@ public class PlayerServiceImpl implements PlayerService {
     public PlayerDTO removePlayerFromTeam(
             Long playerId
     ) {
-        Player player = getPlayerOrThrowNotFound(playerId);
+        Player player = getPlayer(playerId);
 
         player.setTeam(null);
 
@@ -132,7 +132,7 @@ public class PlayerServiceImpl implements PlayerService {
     public void delete(
             Long id
     ) {
-        Player player = getPlayerOrThrowNotFound(id);
+        Player player = getPlayer(id);
         playerRepository.delete(player);
     }
 }
