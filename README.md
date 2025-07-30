@@ -10,6 +10,10 @@
 - username: postgres
 - password: 123456789
 
+# Postman workspace
+
+https://www.postman.com/research-physicist-15264027/workspace/football-manager
+
 # Running the application
 
 - Clone project
