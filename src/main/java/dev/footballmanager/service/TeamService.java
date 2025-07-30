@@ -10,7 +10,7 @@ public interface TeamService {
 
     TeamDTO findById(Long id);
 
-    Team getTeamOrThrowNotFound(Long id);
+    Team getTeam(Long id);
 
     Page<TeamDTO> findAll(Pageable pageable);
 

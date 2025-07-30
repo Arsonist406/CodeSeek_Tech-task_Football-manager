@@ -32,12 +32,12 @@ public class TeamServiceImpl implements TeamService {
     public TeamDTO findById(
             Long id
     ) {
-        Team team = getTeamOrThrowNotFound(id);
+        Team team = getTeam(id);
         return teamMapper.toDTO(team);
     }
 
     @Override
-    public Team getTeamOrThrowNotFound(
+    public Team getTeam(
             Long id
     ) {
         return teamRepository
@@ -69,7 +69,7 @@ public class TeamServiceImpl implements TeamService {
             Long id,
             TeamDTO dto
     ) {
-        Team team = getTeamOrThrowNotFound(id);
+        Team team = getTeam(id);
 
         updateIfChanged(team::getName, team::setName, dto.name());
         updateIfChanged(team::getTransferFee, team::setTransferFee, dto.transferFee());
@@ -94,9 +94,9 @@ public class TeamServiceImpl implements TeamService {
     public void transferAPlayer(
             TransferInfoDTO dto
     ) {
-        Team sellingTeam = getTeamOrThrowNotFound(dto.sellingTeamId());
+        Team sellingTeam = getTeam(dto.sellingTeamId());
         Player player = getTeamPlayerByIdOrThrowNotFound(sellingTeam, dto.playerId());
-        Team buyingTeam = getTeamOrThrowNotFound(dto.buyingTeamId());
+        Team buyingTeam = getTeam(dto.buyingTeamId());
 
         double transferCost = calcTransferCost(player);
         double finalTransferCost = transferCost + (transferCost * sellingTeam.getTransferFee() / 100.0);
@@ -143,7 +143,7 @@ public class TeamServiceImpl implements TeamService {
     public void delete(
             Long id
     ) {
-        Team team = getTeamOrThrowNotFound(id);
+        Team team = getTeam(id);
 
         team.getPlayers().forEach(player -> player.setTeam(null));
 
