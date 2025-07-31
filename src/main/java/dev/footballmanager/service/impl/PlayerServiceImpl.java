@@ -97,21 +97,19 @@ public class PlayerServiceImpl implements PlayerService {
         Player player = getPlayer(playerId);
         Team team = teamService.getTeam(teamId);
 
-        setPlayerTeamIfPlayerNotAlreadyInTeam(player, team);
-
-        Player savedPlayer = playerRepository.save(player);
-        return playerMapper.toDTO(savedPlayer);
-    }
-
-    private void setPlayerTeamIfPlayerNotAlreadyInTeam(
-            Player player,
-            Team team
-    ) {
-        if (player.getTeam() != null) {
+        if (isPlayerAlreadyInTeam(player.getTeam())) {
             throw new PlayerAlreadyInTeamException("Player with id " + player.getId() + " is already in team.");
         }
 
         player.setTeam(team);
+        Player savedPlayer = playerRepository.save(player);
+        return playerMapper.toDTO(savedPlayer);
+    }
+
+    private boolean isPlayerAlreadyInTeam(
+            Team playersTeam
+    ) {
+        return playersTeam != null;
     }
 
     @Override
