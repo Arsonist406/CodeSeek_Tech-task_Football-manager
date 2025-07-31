@@ -101,7 +101,11 @@ public class TeamServiceImpl implements TeamService {
         double transferCost = calcTransferCost(player);
         double finalTransferCost = transferCost + (transferCost * sellingTeam.getTransferFee() / 100.0);
 
-        withdrawFinalTransferCostFromBuyingTeamAccount(buyingTeam, finalTransferCost);
+        if (finalTransferCost > buyingTeam.getAccount()) {
+            throw new NotEnoughMoneyOnAccountException("Team that buys player have not enough money on their account");
+        }
+
+        buyingTeam.setAccount(buyingTeam.getAccount() - finalTransferCost);
         sellingTeam.setAccount(sellingTeam.getAccount() + finalTransferCost);
         player.setTeam(buyingTeam);
     }
@@ -125,17 +129,6 @@ public class TeamServiceImpl implements TeamService {
         double experienceInMouths = player.getExperienceInMouths();
 
         return experienceInMouths * 100000 / ageInYears;
-    }
-
-    private void withdrawFinalTransferCostFromBuyingTeamAccount(
-            Team buyingTeam,
-            double finalTransferCost
-    ) {
-        if (finalTransferCost > buyingTeam.getAccount()) {
-            throw new NotEnoughMoneyOnAccountException("Team that buys player have not enough money on their account");
-        }
-
-        buyingTeam.setAccount(buyingTeam.getAccount() - finalTransferCost);
     }
 
     @Override
