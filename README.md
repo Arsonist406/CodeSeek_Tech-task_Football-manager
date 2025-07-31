@@ -21,7 +21,7 @@ https://www.postman.com/research-physicist-15264027/workspace/football-manager
 - In *path to project*\CodeSeek_Tech-task_Football-manager run commands:
 - "mvn clean package"
 - "java -jar target/Football-manager-3.5.4.jar"
-  OR if you want to set custome database settings
+  OR if you want to set custom database settings
   "java -jar target/Football-manager-3.5.4.jar --DB_URL=jdbc:postgresql://localhost:5432/*your database name* --DB_USERNAME=*your username* --DB_PASSWORD=*your password*"
 
 - Application is running!
