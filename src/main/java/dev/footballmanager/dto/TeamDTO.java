@@ -24,7 +24,7 @@ public record TeamDTO(
 
         @NotNull(message = "Can't be null")
         @PositiveOrZero(message = "Must be 0 or bigger")
-        double account,
+        double financialAccountInDouble,
 
         Set<PlayerShortDTO> players
 

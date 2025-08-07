@@ -27,9 +27,9 @@ public class Team {
             nullable = false)
     private double transferFeeInPercent;
 
-    @Column(name = "account",
+    @Column(name = "financial_account_in_double",
             nullable = false)
-    private double account;
+    private double financialAccountInDouble;
 
     @OneToMany(
             mappedBy = "team",

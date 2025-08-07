@@ -35,6 +35,6 @@ public record PlayerDTO(
                 Long id,
                 String name,
                 double transferFeeInPercent,
-                double account
+                double financialAccountInDouble
         ) implements Serializable {}
 }
