@@ -31,9 +31,9 @@ public class Player {
             nullable = false)
     private LocalDate birthDate;
 
-    @Column(name = "experience_in_mouths",
+    @Column(name = "experience_in_months",
             nullable = false)
-    private int experienceInMouths;
+    private int experienceInMonths;
 
     @ManyToOne(
             fetch = FetchType.LAZY)

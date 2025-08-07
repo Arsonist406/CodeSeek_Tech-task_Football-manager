@@ -72,7 +72,7 @@ public class PlayerServiceImpl implements PlayerService {
         updateIfChanged(player::getName, player::setName, dto.name());
         updateIfChanged(player::getSurname, player::setSurname, dto.surname());
         updateIfChanged(player::getBirthDate, player::setBirthDate, dto.birthDate());
-        updateIfChanged(player::getExperienceInMouths, player::setExperienceInMouths, dto.experienceInMouths());
+        updateIfChanged(player::getExperienceInMonths, player::setExperienceInMonths, dto.experienceInMonths());
 
         Player savedPlayer = playerRepository.save(player);
         return playerMapper.toDTO(savedPlayer);

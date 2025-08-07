@@ -34,6 +34,6 @@ public record TeamDTO(
                 String name,
                 String surname,
                 LocalDate birthDate,
-                int experienceInMouths
+                int experienceInMonths
         ) implements Serializable {}
 }

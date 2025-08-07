@@ -26,7 +26,7 @@ public record PlayerDTO(
         LocalDate birthDate,
 
         @PositiveOrZero(message = "Must be 0 or bigger")
-        int experienceInMouths,
+        int experienceInMonths,
 
         TeamShortDTO team
 

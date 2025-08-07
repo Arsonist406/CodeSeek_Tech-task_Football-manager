@@ -130,9 +130,9 @@ public class TeamServiceImpl implements TeamService {
     ) {
         Period period = Period.between(player.getBirthDate(), LocalDate.now());
         int ageInYears = period.getYears();
-        double experienceInMouths = player.getExperienceInMouths();
+        double experienceInMonths = player.getExperienceInMonths();
 
-        return experienceInMouths * transferPriceCoefficient / ageInYears;
+        return experienceInMonths * transferPriceCoefficient / ageInYears;
     }
 
     @Override
