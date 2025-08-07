@@ -45,6 +45,16 @@ public class RestExceptionHandler {
                 .build());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public ErrorDTO handleUnexpectedException(
+            Exception e,
+            WebRequest request
+    ) {
+        Set<ErrorDTO.ErrorDetail> details = buildErrorDetails(e);
+        return buildErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, request, details);
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public ErrorDTO handleNotFoundException(
