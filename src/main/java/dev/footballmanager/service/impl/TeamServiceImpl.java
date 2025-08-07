@@ -10,6 +10,7 @@ import dev.footballmanager.model.Team;
 import dev.footballmanager.repository.TeamRepository;
 import dev.footballmanager.service.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class TeamServiceImpl implements TeamService {
 
     private final TeamRepository teamRepository;
     private final TeamMapper teamMapper;
+
+    @Value("${transfer.price.coefficient}")
+    private double transferPriceCoefficient;
 
     @Override
     public TeamDTO findById(
@@ -128,7 +132,7 @@ public class TeamServiceImpl implements TeamService {
         int ageInYears = period.getYears();
         double experienceInMouths = player.getExperienceInMouths();
 
-        return experienceInMouths * 100000 / ageInYears;
+        return experienceInMouths * transferPriceCoefficient / ageInYears;
     }
 
     @Override

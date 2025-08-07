@@ -23,3 +23,7 @@ spring:
 server:
     servlet:
         context-path: /api/v1
+
+transfer:
+    price:
+        coefficient: ${TRANSFER_PRICE_COEFFICIENT:100000}
