@@ -6,14 +6,15 @@ import dev.footballmanager.exception.NotFoundException;
 import dev.footballmanager.exception.PlayerAlreadyInTeamException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -68,8 +69,7 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({
             NotEnoughMoneyOnAccountException.class,
-            PlayerAlreadyInTeamException.class,
-            DateTimeException.class
+            PlayerAlreadyInTeamException.class
     })
     public ErrorDTO handleBadRequest(
             RuntimeException e,
@@ -115,5 +115,38 @@ public class RestExceptionHandler {
                 .collect(Collectors.toSet());
 
         return buildErrorDTO(HttpStatus.BAD_REQUEST, request, details);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ErrorDTO handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            WebRequest request
+    ) {
+        Throwable rootCause = ex.getRootCause();
+
+        return switch (rootCause) {
+            case null -> buildErrorDTO(HttpStatus.BAD_REQUEST, request, Set.of(
+                    ErrorDTO.ErrorDetail
+                            .builder()
+                            .value(null)
+                            .message("Malformed JSON request")
+                            .build()
+            ));
+            case DateTimeParseException ignored -> buildErrorDTO(HttpStatus.BAD_REQUEST, request, Set.of(
+                    ErrorDTO.ErrorDetail
+                            .builder()
+                            .value(null)
+                            .message("Invalid date format. Expected format is yyyy-MM-dd.")
+                            .build()
+            ));
+            default -> buildErrorDTO(HttpStatus.BAD_REQUEST, request, Set.of(
+                    ErrorDTO.ErrorDetail
+                            .builder()
+                            .value(null)
+                            .message("Malformed JSON: " + rootCause.getMessage())
+                            .build()
+            ));
+        };
     }
 }
