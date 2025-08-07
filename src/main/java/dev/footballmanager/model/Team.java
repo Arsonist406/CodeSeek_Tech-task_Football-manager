@@ -23,9 +23,9 @@ public class Team {
             nullable = false)
     private String name;
 
-    @Column(name = "transfer_fee",
+    @Column(name = "transfer_fee_in_percent",
             nullable = false)
-    private double transferFee;
+    private double transferFeeInPercent;
 
     @Column(name = "account",
             nullable = false)

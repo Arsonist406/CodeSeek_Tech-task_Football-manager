@@ -76,7 +76,7 @@ public class TeamServiceImpl implements TeamService {
         Team team = getTeam(id);
 
         updateIfChanged(team::getName, team::setName, dto.name());
-        updateIfChanged(team::getTransferFee, team::setTransferFee, dto.transferFee());
+        updateIfChanged(team::getTransferFeeInPercent, team::setTransferFeeInPercent, dto.transferFeeInPercent());
         updateIfChanged(team::getAccount, team::setAccount, dto.account());
 
         Team savedTeam = teamRepository.save(team);
@@ -103,7 +103,7 @@ public class TeamServiceImpl implements TeamService {
         Team buyingTeam = getTeam(dto.buyingTeamId());
 
         double transferCost = calcTransferCost(player);
-        double finalTransferCost = transferCost + (transferCost * sellingTeam.getTransferFee() / 100.0);
+        double finalTransferCost = transferCost + (transferCost * sellingTeam.getTransferFeeInPercent() / 100.0);
 
         if (finalTransferCost > buyingTeam.getAccount()) {
             throw new NotEnoughMoneyOnAccountException("Team that buys player have not enough money on their account");

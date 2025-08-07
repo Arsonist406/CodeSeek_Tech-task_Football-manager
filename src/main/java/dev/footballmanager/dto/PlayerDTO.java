@@ -34,7 +34,7 @@ public record PlayerDTO(
         public record TeamShortDTO(
                 Long id,
                 String name,
-                double transferFee,
+                double transferFeeInPercent,
                 double account
         ) implements Serializable {}
 }

@@ -20,7 +20,7 @@ public record TeamDTO(
 
         @NotNull(message = "Can't be null")
         @Range(message = "Must be in range from 0 to 10", min = 0, max = 10)
-        double transferFee,
+        double transferFeeInPercent,
 
         @NotNull(message = "Can't be null")
         @PositiveOrZero(message = "Must be 0 or bigger")
