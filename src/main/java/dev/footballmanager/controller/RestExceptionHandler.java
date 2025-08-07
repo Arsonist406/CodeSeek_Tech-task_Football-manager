@@ -35,19 +35,23 @@ public class RestExceptionHandler {
                 .build();
     }
 
+    private Set<ErrorDTO.ErrorDetail> buildErrorDetails(
+            Exception e
+    ) {
+        return Set.of(ErrorDTO.ErrorDetail
+                .builder()
+                .value(null)
+                .message(e.getMessage())
+                .build());
+    }
+
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public ErrorDTO notFoundException(
+    public ErrorDTO handleNotFoundException(
             NotFoundException e,
             WebRequest request
     ) {
-        Set<ErrorDTO.ErrorDetail> details = Set.of(
-                ErrorDTO.ErrorDetail
-                        .builder()
-                        .value(null)
-                        .message(e.getMessage())
-                        .build());
-
+        Set<ErrorDTO.ErrorDetail> details = buildErrorDetails(e);
         return buildErrorDTO(HttpStatus.NOT_FOUND, request, details);
     }
 
@@ -57,23 +61,17 @@ public class RestExceptionHandler {
             PlayerAlreadyInTeamException.class,
             DateTimeException.class
     })
-    public ErrorDTO badRequest(
+    public ErrorDTO handleBadRequest(
             RuntimeException e,
             WebRequest request
     ) {
-        Set<ErrorDTO.ErrorDetail> details = Set.of(
-                ErrorDTO.ErrorDetail
-                        .builder()
-                        .value(null)
-                        .message(e.getMessage())
-                        .build());
-
+        Set<ErrorDTO.ErrorDetail> details = buildErrorDetails(e);
         return buildErrorDTO(HttpStatus.BAD_REQUEST, request, details);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorDTO ConstraintViolationException(
+    public ErrorDTO handleConstraintViolationException(
             ConstraintViolationException e,
             WebRequest request
     ) {
@@ -92,7 +90,7 @@ public class RestExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorDTO MethodArgumentNotValidException(
+    public ErrorDTO handleMethodArgumentNotValidException(
             MethodArgumentNotValidException e,
             WebRequest request
     ) {
